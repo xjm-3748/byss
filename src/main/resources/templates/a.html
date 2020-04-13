@@ -1,0 +1,184 @@
+<!doctype html>
+<!--[if lt IE 7 ]><html xmlns:th="http://www.thymeleaf.org" lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]><html xmlns:th="http://www.thymeleaf.org" lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]><html xmlns:th="http://www.thymeleaf.org" lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]><html xmlns:th="http://www.thymeleaf.org" lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html xmlns:th="http://www.thymeleaf.org" lang="en" class="no-js" > <!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title></title>
+    <link rel="stylesheet" href="../static/bootstrap-3.3.7-dist/css/bootstrap.css" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.css}" />
+    <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+    <script src="../static/bootstrap-3.3.7-dist/js/libs/bootstrap.js" th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
+</head>
+
+
+
+<title>bugSearch</title>
+    <style>
+        body
+        {
+            background-size:cover;
+            /*background-image: url(/templates/img/background.png);*/
+            background-repeat: no-repeat;
+             background-color:white;
+        }
+
+        #icon{
+            height: 300px;
+            margin: 0 auto;
+            left: 40%;
+        }
+        #div1{
+            margin-top: 800px;
+            height: 100px;
+            margin: 5% auto;
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Marcellus SC', Times, serif;
+            font-size: 60px;
+            letter-spacing: 0.6em;
+            text-align: center;
+            padding-left: 0.7em; /* Required for centering */
+        }
+        a.blacklink {
+             color: #000000;
+        }
+        .subheading {
+            letter-spacing: 0.4em;
+            text-align: center;
+        }
+
+                ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 1px solid #e7e7e7;
+            background-color: #f3f3f3;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: #666;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        li a.active {
+            color: white;
+            background-color: #4CAF50;
+        }
+        #inputMessage{
+            margin: 20px;
+            padding-left: 35%;
+            padding-right: 35%;
+
+        }
+
+
+        </style>
+
+
+</head>
+
+<body>
+
+    <ul>
+        <li><a class="active" href="#home">主页</a></li>
+
+      </ul>
+      
+    <div class="col-md-2" style="background-color:white ;margin-top: 200px;margin-left:50px;">
+
+        <h3 >recent Use</h3>
+
+
+        <table class="table " >
+            <!-- <tr style="border-right: 5px solid  black;">
+                <td s>recent use</td>
+            </tr> -->
+            
+            <tr th:each="userProjectName: ${alreadyFileList}" class="text-info" style="border-right: 5px solid  black;">
+                <td th:text="${userProjectName}" id="linkToIssue" >course_Name</td>
+<!--                <td th:text="${issue.content} " >content</td>-->
+            </tr>
+        </table>
+        <span></span>
+
+    </div>
+
+    <div class="col-md-8" style="background-color: white">
+        <div id ="div2" style ="margin-top: 200px;">
+            <h1><a href="/a.html" class="blacklink">bugSearch</a></h1>
+            <p class="subheading text-muted">一种基于ir方法的检测工具</p>
+
+        </div>
+
+        <div  id="inputMessage" >
+            <div class="form-group">
+                    <!-- <label class="col-sm-2 control-label">aaa</label> -->
+                    <input type="StrippedCharField"
+                        id="userName"
+                        class="form-control "
+                        placeholder="输入用户名" 
+                        style="margin: 20px;">
+                    <input type="StrippedCharField"
+                        class="form-control "
+                        id="projectName"
+                        style="margin: 20px;"
+                        placeholder="输入项目名">
+                    <button style="margin: 20px;" type="button" class="btn btn-primary btn-block" id="submit" data-loading-text="正在提交...">获取项目</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(function() {
+        $("#linkToIssue").click(function () {
+            var userProjectName = $(this).text();
+            var userName=userProjectName.split("/")[0];
+            var ProjectName=userProjectName.split("/")[1];
+           $.ajax({
+                type: "POST",
+                url: "/save",
+                data: {
+                    "userName" : userName,
+                    "projectName" : ProjectName
+                },
+                success: function () {
+                    window.location.href ="/issue";
+                }
+            });
+        });
+        $("#submit").click(function (e) {
+            // window.location.href ="aadmin.html";
+            $.ajax({
+                type : "POST",
+                url : "/save",
+                data : {
+                    "userName" : $("#userName").val(),
+                    "projectName" : $("#projectName").val()
+                },
+                success : function() {
+                        window.location.href ="/downloading";
+                }
+            });
+        });
+    });
+</script>
+</html>

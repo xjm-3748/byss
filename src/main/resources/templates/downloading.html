@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="vue.js"></script>
+
+
+
+    <title>bugSearch</title>
+    <style>
+        body
+        {
+            background-size:cover;
+            background-image: url(templates/img/background.png);
+            background-repeat: no-repeat;
+        }
+
+        #icon{
+            height: 300px;
+            margin: 0 auto;
+            left: 40%;
+        }
+        #div1{
+            margin-top: 800px;
+            height: 100px;
+            margin: 5% auto;
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Marcellus SC', Times, serif;
+            font-size: 60px;
+            letter-spacing: 0.6em;
+            text-align: center;
+            padding-left: 0.7em; /* Required for centering */
+        }
+        a.blacklink {
+            color: #000000;
+        }
+        .subheading {
+            letter-spacing: 0.4em;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 1px solid #e7e7e7;
+            background-color: #f3f3f3;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: #666;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        li a.active {
+            color: white;
+            background-color: #4CAF50;
+        }
+        #inputMessage{
+            margin: 20px;
+            padding-left: 30%;
+            padding-right: 30%;
+
+        }
+
+
+    </style>
+    <style>
+        .load-container {
+            /* background-color: #F1F1EA; */
+            width: auto;
+            height: 700px;
+            position: relative;
+            overflow: hidden;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .loader {
+            font-size: 10px;
+            margin: 100px auto;
+            /* margin-top: 300px; */
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            text-indent: -9999em;
+            position: relative;
+            animation: mymove 1.3s infinite linear;
+            -webkit-animation: mymove 1.5s infinite linear;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        @keyframes mymove {
+            0%,
+            100% {
+                box-shadow: 0 -3em 0 0.2em #46A4C9, 2em -2em 0 0em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0 0 -1em #46A4C9, -2em -2em 0 0 #46A4C9;
+            }
+            12.5% {
+                box-shadow: 0 -3em 0 0 #46A4C9, 2em -2em 0 0.2em #46A4C9, 3em 0 0 0 #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            25% {
+                box-shadow: 0 -3em 0 -0.5em #46A4C9, 2em -2em 0 0 #46A4C9, 3em 0 0 0.2em #46A4C9, 2em 2em 0 0 #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            37.5% {
+                box-shadow: 0 -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0em 0 0 #46A4C9, 2em 2em 0 0.2em #46A4C9, 0 3em 0 0em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0em 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            50% {
+                box-shadow: 0 -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 0em #46A4C9, 0 3em 0 0.2em #46A4C9, -2em 2em 0 0 #46A4C9, -3em 0em 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            62.5% {
+                box-shadow: 0 -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 0 #46A4C9, -2em 2em 0 0.2em #46A4C9, -3em 0 0 0 #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            75% {
+                box-shadow: 0em -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0em 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 0 #46A4C9, -3em 0em 0 0.2em #46A4C9, -2em -2em 0 0 #46A4C9;
+            }
+            87.5% {
+                box-shadow: 0em -3em 0 0 #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 0 #46A4C9, -3em 0em 0 0 #46A4C9, -2em -2em 0 0.2em #46A4C9;
+            }
+        }
+
+        @-webkit-keyframes mymove
+            /*Safari and Chrome*/
+        {
+            0%,
+            100% {
+                box-shadow: 0 -3em 0 0.2em #46A4C9, 2em -2em 0 0em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0 0 -1em #46A4C9, -2em -2em 0 0 #46A4C9;
+            }
+            12.5% {
+                box-shadow: 0 -3em 0 0 #46A4C9, 2em -2em 0 0.2em #46A4C9, 3em 0 0 0 #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            25% {
+                box-shadow: 0 -3em 0 -0.5em #46A4C9, 2em -2em 0 0 #46A4C9, 3em 0 0 0.2em #46A4C9, 2em 2em 0 0 #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            37.5% {
+                box-shadow: 0 -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0em 0 0 #46A4C9, 2em 2em 0 0.2em #46A4C9, 0 3em 0 0em #46A4C9, -2em 2em 0 -1em #46A4C9, -3em 0em 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            50% {
+                box-shadow: 0 -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 0em #46A4C9, 0 3em 0 0.2em #46A4C9, -2em 2em 0 0 #46A4C9, -3em 0em 0 -1em #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            62.5% {
+                box-shadow: 0 -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 0 #46A4C9, -2em 2em 0 0.2em #46A4C9, -3em 0 0 0 #46A4C9, -2em -2em 0 -1em #46A4C9;
+            }
+            75% {
+                box-shadow: 0em -3em 0 -1em #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0em 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 0 #46A4C9, -3em 0em 0 0.2em #46A4C9, -2em -2em 0 0 #46A4C9;
+            }
+            87.5% {
+                box-shadow: 0em -3em 0 0 #46A4C9, 2em -2em 0 -1em #46A4C9, 3em 0 0 -1em #46A4C9, 2em 2em 0 -1em #46A4C9, 0 3em 0 -1em #46A4C9, -2em 2em 0 0 #46A4C9, -3em 0em 0 0 #46A4C9, -2em -2em 0 0.2em #46A4C9;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<ul>
+    <li><a class="active" href="#home">主页</a></li>
+    <li><a href="#news">新闻</a></li>
+
+</ul>
+
+<div id="div1">   <img id="icon" src="img/1.jpg" class="img-circle"></div>
+
+<div id ="div2">
+    <h1><a href="/a.html" class="blacklink">bugSearch</a></h1>
+    <p class="subheading text-muted">一种基于ir方法的检测工具</p>
+
+</div>
+
+<div class='load-container'>
+    <div class='loader'></div>
+</div>
+
+
+
+
+</body>
+
+
+<script>
+    $(function() {
+        $.ajax({
+            type : "POST",
+            url : "/downloadAndUnzip",
+            data : {
+                "userName" : $("#userName").val(),
+                "projectName" : $("#projectName").val()
+            },
+            success : function() {
+                window.location.href ="/issue";
+            }
+        });
+    });
+</script>
+</html>
