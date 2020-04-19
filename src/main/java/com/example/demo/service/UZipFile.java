@@ -59,12 +59,12 @@ public class UZipFile
         }
         System.out.println("******************解压完毕********************");
     }
-//    public static void main(String[] args) throws IOException {
-//        /**
-//         * 解压文件
-//         */
-//        File zipFile = new File("E:\\ideaDownload\\fileDemo\\xjm-3748；vaderSentiment.zip");
-//        String path = "E:\\ideaDownload\\fileDemo\\uZip\\";
-//        unZipFiles(zipFile, path);
-//    }
+    public static void main(String[] args) throws IOException {
+        /**
+         * 解压文件
+         */
+        File zipFile = new File("E:\\ideaDownload\\fileDemo\\xjm-3748；HelloWorld.zip");
+        String path = "E:\\ideaDownload\\fileDemo\\";
+        unZipFiles(zipFile, path);
+    }
 }
