@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 
 public class getIssue {
     public static void main(String[] args)  {
-        String useName="KunMinX" +
+        String useName="HotBitmapGG" +
                 "";
-        String projectName="Jetpack-MusicPlayer";
+        String projectName="bilibili-android-client";
 
         getIssue g=new getIssue();
         ArrayList<issue>aaa=(g.getIssueList(useName,projectName));

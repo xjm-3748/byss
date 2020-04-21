@@ -126,7 +126,7 @@ public class issueController {
 		String issueId =(String) request.getSession().getAttribute("issueId");
 		ArrayList<issue> ls=getIssueService.getIssueList(userName,projectName);
 		for(issue i :ls){
-			if(i.getId().equals(issueId)){
+			if(i.getIssueId().equals(issueId)){
 				i.setContent(getIssueService.getIssueContent(userName,projectName,issueId));
 				request.getSession().setAttribute("issueMessage",i);
 				break;

@@ -1,29 +1,37 @@
 package com.example.demo.model;
 
-public class issue {
-    String title;
-    String id;
-    String content;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-    public issue(String title,String id,String content){
+@Entity
+public class issue {
+    @Id
+    String userName;
+    String title;
+    String issueId;
+    String content;
+    public issue(){}
+
+    public issue(String userName,String title,String issueId,String content){
+        this.userName=userName;
         this.title=title;
         this.content=content;
-        this.id=id;
+        this.issueId=issueId;
     }
-    public issue(String title,String id){
+    public issue(String title,String issueId){
         this.title=title;
-        this.id=id;
+        this.issueId=issueId;
     }
-    public void setId(String id) {
-        this.id = id;
+    public void setIssueId(String issueId) {
+        this.issueId = issueId;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    public String getId() {
-        return id;
+    public String getIssueId() {
+        return issueId;
     }
 
     public String getContent() {
