@@ -1,6 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.Repository.issueRepository;
+import com.example.demo.model.IssueEntity;
 import com.example.demo.model.issue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,16 +16,22 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Service
 public class getIssue {
-    public static void main(String[] args)  {
-        String useName="HotBitmapGG" +
-                "";
-        String projectName="bilibili-android-client";
+    @Autowired
+    private issueRepository issueRepository;
 
+    public static void main(String[] args)  {
+        String useName="HotBitmapGG";
+        String projectName="bilibili-android-client";
         getIssue g=new getIssue();
         ArrayList<issue>aaa=(g.getIssueList(useName,projectName));
         System.out.println(aaa);
+    }
+
+
+    public  void  saveIssue(IssueEntity issue){
+        issueRepository.save(issue);
     }
 
     public ArrayList<issue> getIssueList (String username,String projectName){

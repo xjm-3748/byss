@@ -5,35 +5,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "issue", schema = "graduatedesign", catalog = "")
-@IdClass(IssueEntityPK.class)
 public class IssueEntity {
-    private String userName;
-    private String projectName;
     private String issueId;
-    private String content;
-    private String title;
+    private String issueTitle;
+    private String issueContent;
+    private String projectName;
+    private String userName;
+    public  IssueEntity(){
 
-    @Id
-    @Column(name = "userName")
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     @Id
-    @Column(name = "projectName")
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    @Basic
     @Column(name = "issueId")
     public String getIssueId() {
         return issueId;
@@ -44,23 +26,43 @@ public class IssueEntity {
     }
 
     @Basic
-    @Column(name = "content")
-    public String getContent() {
-        return content;
+    @Column(name = "issueTitle")
+    public String getIssueTitle() {
+        return issueTitle;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setIssueTitle(String issueTitle) {
+        this.issueTitle = issueTitle;
     }
 
     @Basic
-    @Column(name = "title")
-    public String getTitle() {
-        return title;
+    @Column(name = "issueContent")
+    public String getIssueContent() {
+        return issueContent;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setIssueContent(String issueContent) {
+        this.issueContent = issueContent;
+    }
+
+    @Basic
+    @Column(name = "projectName")
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    @Basic
+    @Column(name = "userName")
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Override
@@ -68,15 +70,17 @@ public class IssueEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IssueEntity that = (IssueEntity) o;
-        return Objects.equals(userName, that.userName) &&
+        return Objects.equals(issueId, that.issueId) &&
+                Objects.equals(issueTitle, that.issueTitle) &&
+                Objects.equals(issueContent, that.issueContent) &&
                 Objects.equals(projectName, that.projectName) &&
-                Objects.equals(issueId, that.issueId) &&
-                Objects.equals(content, that.content) &&
-                Objects.equals(title, that.title);
+                Objects.equals(userName, that.userName);
     }
+
+
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, projectName, issueId, content, title);
+        return Objects.hash(issueId, issueTitle, issueContent, projectName, userName);
     }
 }
