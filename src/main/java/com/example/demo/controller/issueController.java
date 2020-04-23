@@ -1,7 +1,7 @@
 
 package com.example.demo.controller;
 
-import com.example.demo.model.issue;
+import com.example.demo.model.IssueEntity;
 import com.example.demo.service.fileDownload;
 import com.example.demo.service.fileRead;
 import com.example.demo.service.getIssue;
@@ -50,12 +50,15 @@ public class issueController {
 		request.getSession().setAttribute("userName",userName);
 		request.getSession().setAttribute("projectName",projectName);
 	}
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/setIssueId",method = RequestMethod.POST)
 	@ResponseBody
 	public void setIssueId(HttpServletRequest request) {
 		String issueId=request.getParameter("issueId");
+		String issueTitle=request.getParameter("issueTitle");
+
 		request.getSession().setAttribute("issueId",issueId);
+		request.getSession().setAttribute("issueTitle",issueTitle);
 	}
 
 	@RequestMapping(value = "/setFileName",method = RequestMethod.POST)
@@ -110,7 +113,7 @@ public class issueController {
 	public ModelAndView issueSet(HttpServletRequest request){
         String userName=(String) request.getSession().getAttribute("userName");
         String projectName=(String) request.getSession().getAttribute("projectName");
-        ArrayList<issue> issueList =getIssueService.getIssueList(userName,projectName);
+        ArrayList<IssueEntity> issueList =getIssueService.getIssueList(userName,projectName);
         ModelAndView modelAndView = new ModelAndView( "fileShow" );
         modelAndView.addObject( "issueList", issueList );
         modelAndView.addObject( "nameOfProject", userName+projectName );
@@ -124,14 +127,21 @@ public class issueController {
 		String userName=(String) request.getSession().getAttribute("userName");
 		String projectName=(String) request.getSession().getAttribute("projectName");
 		String issueId =(String) request.getSession().getAttribute("issueId");
-		ArrayList<issue> ls=getIssueService.getIssueList(userName,projectName);
-		for(issue i :ls){
-			if(i.getIssueId().equals(issueId)){
-				i.setContent(getIssueService.getIssueContent(userName,projectName,issueId));
-				request.getSession().setAttribute("issueMessage",i);
-				break;
-			}
-		}
+//		String issueTitle=(String) request.getSession().getAttribute("issueId");
+
+		ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
+
+		IssueEntity i=new IssueEntity();
+//		i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
+		//todo
+		request.getSession().setAttribute("issueMessage",i);
+
+//		for(IssueEntity i :ls){
+//			if(i.getIssueId().equals(issueId)){
+//				i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
+//				break;
+//			}
+//		}
 		System.out.println("issueDetail");
 		//todo 找到对应文件列表
 		ArrayList<String>fileList=new ArrayList<>();

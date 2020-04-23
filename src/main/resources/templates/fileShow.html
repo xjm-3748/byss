@@ -36,8 +36,8 @@
 <!--                <td>content</td>-->
             </tr>
             <tr th:each="issue: ${issueList}" class="text-info">
-                <td th:text="${issue.id}">course_Name</td>
-                <td th:text="${issue.title} " class="linkToDetail" >course_Name</td>
+                <td th:text="${issue.issueId}">course_Name</td>
+                <td th:text="${issue.issueTitle} " class="linkToDetail" >course_Name</td>
 <!--                <td th:text="${issue.content} " >content</td>-->
             </tr>
         </table>
@@ -50,11 +50,14 @@
     $(function() {
         $(".linkToDetail").click(function () {
             var issueId = $(this).parents("tr").children("td:nth-child(1)").text();
+            var issueTitle = $(this).parents("tr").children("td:nth-child(2)").text();
+
             $.ajax({
                 type: "POST",
                 url: "/setIssueId",
                 data: {
-                    "issueId": issueId
+                    "issueId": issueId,
+                    "issueTitle": issueTitle
                 },
                 success: function () {
                     window.location.href = "/issueDetail";
