@@ -24,26 +24,32 @@ public class issueRepositoryTests {
 	@Resource
 	private issueRepository issueRepository;
 
+//	@Test
+//	public void testSave() {
+//		IssueEntity  issueEntity=new IssueEntity();
+//		issueEntity.setIssueContent("thisIsContent");
+//		issueEntity.setIssueId("thisIsIssueId222");
+//		issueEntity.setProjectName("thisProjectName");
+//		issueEntity.setUserName("thisIsUserName");
+//		issueEntity.setIssueTitle("thisIsTitle");
+//		issueRepository.save(issueEntity);
+//	}
+//	@Test
+//	public void testfindAll() {
+//		List<IssueEntity> ls =issueRepository.findAllByUserNameAndProjectName("thisIsUserName","thisProjectName");
+//		Assert.assertEquals(ls.size(),1);
+//	}
+//	@Test
+//	public void testDelete() {
+//		issueRepository.deleteById("thisIsIssueId222");
+//	}
 	@Test
-	public void testSave() {
-		IssueEntity  issueEntity=new IssueEntity();
-		issueEntity.setIssueContent("thisIsContent");
-		issueEntity.setIssueId("thisIsIssueId222");
-		issueEntity.setProjectName("thisProjectName");
-		issueEntity.setUserName("thisIsUserName");
-		issueEntity.setIssueTitle("thisIsTitle");
-		issueRepository.save(issueEntity);
-	}
-	@Test
-	public void testfindAll() {
-		List<IssueEntity> ls =issueRepository.findAllByUserNameAndProjectName("thisIsUserName","thisProjectName");
-		Assert.assertEquals(ls.size(),1);
-	}
-	@Test
-	public void testDelete() {
-		issueRepository.deleteById("thisIsIssueId222");
-	}
+	public void testfind() {
+		IssueEntity ls =issueRepository.findById("HotBitmapGGbilibili-android-client57").get();
 
+		System.out.println("aaaa");
+		//		Assert.assertEquals(ls.size(),1);
+	}
 //	@Test
 //	public void testBaseQuery() {
 //		Date date = new Date();

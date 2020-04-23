@@ -1,37 +1,18 @@
 package com.example.demo.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
 @Table(name = "gitproject", schema = "graduatedesign", catalog = "")
 public class GitprojectEntity {
-    private int id;
-    private String userName;
     private String projectName;
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+
     @Id
-    @Column(name = "id")
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "User_Name")
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    @Basic
-    @Column(name = "Project_Name")
+    @Column(name = "project_name")
     public String getProjectName() {
         return projectName;
     }
@@ -45,13 +26,11 @@ public class GitprojectEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GitprojectEntity that = (GitprojectEntity) o;
-        return id == that.id &&
-                Objects.equals(userName, that.userName) &&
-                Objects.equals(projectName, that.projectName);
+        return Objects.equals(projectName, that.projectName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, projectName);
+        return Objects.hash(projectName);
     }
 }

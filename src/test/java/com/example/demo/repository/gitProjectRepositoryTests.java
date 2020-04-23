@@ -1,17 +1,13 @@
 package com.example.demo.repository;
 
 import com.example.demo.Repository.gitProjectRepository;
-import com.example.demo.Repository.issueRepository;
 import com.example.demo.model.GitprojectEntity;
-import com.example.demo.model.IssueEntity;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,8 +20,9 @@ public class gitProjectRepositoryTests {
 	public void testSave() {
 
 		GitprojectEntity g=new GitprojectEntity();
-		g.setProjectName("this is project Name");
-		g.setUserName("this is userName");
+//		g.setProjectName("this is project Name");
+//		g.setUserName("this is userName");
+		g.setProjectName("lalalalalala");
 		gitr.save(g);
 
 	}

@@ -4,7 +4,7 @@ import com.example.demo.model.GitprojectEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface gitProjectRepository extends JpaRepository<GitprojectEntity, Integer> {
+public interface gitProjectRepository extends JpaRepository<GitprojectEntity, String> {
 
 //    User findByUserName(String userName);
 //

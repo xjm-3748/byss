@@ -199,15 +199,32 @@
     $(function() {
         $.ajax({
             type : "POST",
-            url : "/downloadAndUnzip",
+            url : "/existThisProject",
+
             data : {
-                "userName" : $("#userName").val(),
-                "projectName" : $("#projectName").val()
+                // "email" : $("#email").val(),
+                // "password" : $("#password").val()
             },
-            success : function() {
-                window.location.href ="/issue";
+            // dataType : "json",
+            success : function(data) {
+                if (data.result==="1") {
+                    window.location.href ="/issue";
+                } else {
+                    $.ajax({
+                        type : "POST",
+                        url : "/downloadAndUnzip",
+                        data : {
+                            "userName" : $("#userName").val(),
+                            "projectName" : $("#projectName").val()
+                        },
+                        success : function() {
+                            window.location.href ="/issue";
+                        }
+                    });
+                }
             }
         });
+
     });
 </script>
 </html>

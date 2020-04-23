@@ -8,9 +8,6 @@ import com.example.demo.model.IssueEntity;
 import com.example.demo.service.fileDownload;
 import com.example.demo.service.fileRead;
 import com.example.demo.service.getIssue;
-import com.example.demo.service.impl.issuemessageServiceImpl;
-import com.example.demo.service.issuemessageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.example.demo.service.UZipFile.unZipFiles;
 
@@ -88,7 +88,6 @@ public class issueController {
 	public void downloadAndUnzip(HttpServletRequest request, HttpServletResponse response) {
 		String userName=(String) request.getSession().getAttribute("userName");
 		String projectName=(String) request.getSession().getAttribute("projectName");
-
 		try {
 			fileDownload.downLoadFromUrl("https://github.com/"
 							+userName+"/"+projectName+"/archive/master.zip",userName+"；"+projectName+".zip"
@@ -99,7 +98,6 @@ public class issueController {
         File zipFile = new File("E:\\ideaDownload\\fileDemo\\"+userName+"；"+projectName+".zip");
         String path = "E:\\ideaDownload\\fileDemo\\uZip\\"+userName+"；"+projectName+"\\";
         File newFile=new File(path);
-
         if(!newFile.exists()){
 			newFile.mkdirs();
 		}
@@ -118,10 +116,9 @@ public class issueController {
 		}
 //		issuemessageService
 		GitprojectEntity gitprojectEntity=new GitprojectEntity();
-		gitprojectEntity.setUserName(userName);
-		gitprojectEntity.setProjectName(projectName);
+//		gitprojectEntity.setUserName(userName);
+		gitprojectEntity.setProjectName(userName+projectName);
         gitProjectRepositorythis.save(gitprojectEntity);
-
         System.out.println(userName + projectName+"downloadAndUnzip");
 	}
 
@@ -133,6 +130,23 @@ public class issueController {
 		return  new ModelAndView( "downloading" );
 	}
 
+
+	@RequestMapping(value = "/existThisProject",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> existThisProject(HttpServletRequest request, HttpServletResponse response){
+		String userName=(String) request.getSession().getAttribute("userName");
+		String projectName=(String) request.getSession().getAttribute("projectName");
+
+		Map<String,Object> map =new HashMap<String,Object>();
+		GitprojectEntity g=new GitprojectEntity();
+		g.setProjectName(userName+projectName);
+		if(gitProjectRepositorythis.existsById(userName+projectName)){
+			map.put("result","1");
+		}else
+			map.put("result","0");
+
+		return  map;
+	}
 
 	@RequestMapping("/issue")
 	public ModelAndView issueSet(HttpServletRequest request){
@@ -149,25 +163,27 @@ public class issueController {
 	@RequestMapping("/issueDetail")
 	public ModelAndView issueDetail(HttpServletRequest request){
 
-		String userName=(String) request.getSession().getAttribute("userName");
-		String projectName=(String) request.getSession().getAttribute("projectName");
+//		String userName=(String) request.getSession().getAttribute("userName");
+//		String projectName=(String) request.getSession().getAttribute("projectName");
 		String issueId =(String) request.getSession().getAttribute("issueId");
 //		String issueTitle=(String) request.getSession().getAttribute("issueId");
 
-		ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
+//		ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
 
-		IssueEntity i=new IssueEntity();
+//		IssueEntity i=new IssueEntity();
 //		i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
 		//todo
+        IssueEntity i=issueSql.findById(issueId).get();
 		request.getSession().setAttribute("issueMessage",i);
 
-//		for(IssueEntity i :ls){
+		//		for(IssueEntity i :ls){
 //			if(i.getIssueId().equals(issueId)){
 //				i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
 //				break;
 //			}
 //		}
 		System.out.println("issueDetail");
+
 		//todo 找到对应文件列表
 		ArrayList<String>fileList=new ArrayList<>();
 		fileList.add("fileA.txt");
