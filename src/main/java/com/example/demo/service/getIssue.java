@@ -94,6 +94,8 @@ public class getIssue {
                     m = r.matcher(data);
                     if (m.find()) {
                         IssueEntity temp=new IssueEntity();
+                        temp.setUserName(username);
+                        temp.setProjectName(projectName);
                         temp.setIssueId(username+projectName+m.group(4));
                         temp.setIssueTitle(m.group(2));
                         re.add(temp);

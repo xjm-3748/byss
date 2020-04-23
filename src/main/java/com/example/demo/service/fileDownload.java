@@ -94,7 +94,6 @@ public class fileDownload {
 //                    "demo.zip","E:\\ideaDownload\\fileDemo\\");
 //        }catch (Exception e) {
 //            System.out.println("wrrrrrrrrrrrr");
-//            // TODO: handle exception
 //        }
 //    }
 

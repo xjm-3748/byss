@@ -7,7 +7,8 @@
         <property name="connection.url">jdbc:mysql://localhost:3306/graduateDesign</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <mapping class="com.example.demo.model.IssueEntity"/>
-        <mapping class="com.example.demo.model.IssuemessageEntity"/>
+<!--        <mapping class="com.example.demo.model.IssuemessageEntity"/>-->
+        <mapping class="com.example.demo.model.GitprojectEntity"/>
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->
 

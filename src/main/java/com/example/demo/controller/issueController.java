@@ -1,6 +1,9 @@
 
 package com.example.demo.controller;
 
+import com.example.demo.Repository.gitProjectRepository;
+import com.example.demo.Repository.issueRepository;
+import com.example.demo.model.GitprojectEntity;
 import com.example.demo.model.IssueEntity;
 import com.example.demo.service.fileDownload;
 import com.example.demo.service.fileRead;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -27,9 +31,13 @@ import static com.example.demo.service.UZipFile.unZipFiles;
 @RequestMapping("/")
 public class issueController {
 	String path="E:\\ideaDownload\\fileDemo\\";
-	getIssue getIssueService=new getIssue();
-	issuemessageService issuemessageService=new issuemessageServiceImpl();
-
+	@Resource
+	getIssue getIssueService;
+//	issuemessageService issuemessageService=new issuemessageServiceImpl();
+	@Resource
+	gitProjectRepository gitProjectRepositorythis;
+	@Resource
+	issueRepository  issueSql;
 
 //	@GetMapping("/a.html")
 //	public ModelAndView list() {
@@ -49,7 +57,7 @@ public class issueController {
 	public void save(HttpServletRequest request, HttpServletResponse response) {
 		String userName=request.getParameter("userName");
 		String projectName=request.getParameter("projectName");
-		System.out.println("save这里AAAAAA");
+//		System.out.println("save这里AAAAAA");
 		request.getSession().setAttribute("userName",userName);
 		request.getSession().setAttribute("projectName",projectName);
 	}
@@ -101,21 +109,20 @@ public class issueController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
+
         for(IssueEntity i:ls){
-
-//todo
+        	i=getIssueService.getIssueContent(i);
+			issueSql.save(i);
 		}
-
-
-
 //		issuemessageService
+		GitprojectEntity gitprojectEntity=new GitprojectEntity();
+		gitprojectEntity.setUserName(userName);
+		gitprojectEntity.setProjectName(projectName);
+        gitProjectRepositorythis.save(gitprojectEntity);
 
-
-
-
-
-        System.out.println(userName + projectName);
+        System.out.println(userName + projectName+"downloadAndUnzip");
 	}
 
 	@RequestMapping(value ="/downloading",method = RequestMethod.GET)
@@ -172,6 +179,7 @@ public class issueController {
 		mav.addObject("fileList",fileList);
 		return mav;
 	}
+
 
 	@RequestMapping("/readFile")
 	public ModelAndView readFile(HttpServletRequest request){
