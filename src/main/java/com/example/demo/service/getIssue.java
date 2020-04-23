@@ -6,12 +6,10 @@ import com.example.demo.model.IssueEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,13 +19,13 @@ public class getIssue {
 //    @Autowired
 //    private issueRepository issueRepository;
 
-//    public static void main(String[] args)  {
-//        String useName="tikv";
-//        String projectName="tikv";
-//        getIssue g=new getIssue();
+    public static void main(String[] args)  {
+        String useName="tikv";
+        String projectName="tikv";
+        getIssue g=new getIssue();
 //        ArrayList<IssueEntity>aaa=(g.getIssueList(useName,projectName));
-//        System.out.println(g.howManyPages(useName,projectName));
-//    }
+        g.getIssueContent(useName,projectName,"7626");
+    }
 
     public boolean downloadIssueLog(){
         return false;
@@ -168,36 +166,86 @@ public class getIssue {
     }
 
     public IssueEntity  getIssueContent (String username,String projectName,String issueId){
-
         IssueEntity result=new IssueEntity();
-        String Id=issueId.replaceAll(username,"").replace(projectName,"");
-        String  p="<meta name=\"description\" content=\"" +
-                "(.*)(\">)";
-        Pattern r = Pattern.compile(p);
+        result.setProjectName(projectName);
+        result.setIssueId(issueId);
+        result.setUserName(username);
+        return  getIssueContent(result);
+
+//        IssueEntity result=new IssueEntity();
+//        String Id=issueId.replaceAll(username,"").replace(projectName,"");
+//        String  p="<meta name=\"description\" content=\"" +
+//                "(.*)(\">)";
+//        Pattern r = Pattern.compile(p);
+//        Matcher m;
+//        String re="";
+//        try {
+//            //创建一个URL实例
+//            URL url = new URL("https://github.com/"+username
+//                    +"/"+projectName+"/issues/"+issueId);
+//            try {
+//                //通过URL的openStrean方法获取URL对象所表示的自愿字节输入流
+//                InputStream is = url.openStream();
+//                InputStreamReader isr = new InputStreamReader(is, "utf-8");
+//                //为字符输入流添加缓冲
+//                BufferedReader br = new BufferedReader(isr);
+//                String data = br.readLine();//读取数据
+//                while (data != null) {//循环读取数据
+////                    System.out.println(data);//输出数据
+//                    m = r.matcher(data);
+//                    if (m.find()) {
+////                        System.out.println(m.group(1));
+//                        re+=m.group(1);
+//                    }
+//                    data = br.readLine();
+//                }
+//                br.close();
+//                isr.close();
+//                is.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        result.setIssueContent(re);
+//        result.setUserName(username);
+//        result.setProjectName(projectName);
+//        result.setIssueId(issueId);
+//
+//        return result;
+    }
+
+    public IssueEntity  getIssueContent (IssueEntity issueEntity){
+        String  username=issueEntity.getUserName();
+        String projectName=issueEntity.getProjectName();
+        String Id=issueEntity.getIssueId();
+
+//        IssueEntity result=new IssueEntity();
+        Id=Id.replaceAll(username,"").replace(projectName,"");
+        String  p="<td class=\"d-block comment-body markdown-body {2}js-comment-body\">\\s([\\s\\S]*)</td>";
+        String p2="(<title>)(.*)(</title>)";
+
         Matcher m;
         String re="";
+        String read="";
+
         try {
             //创建一个URL实例
             URL url = new URL("https://github.com/"+username
-                    +"/"+projectName+"/issues/"+issueId);
+                    +"/"+projectName+"/issues/"+Id);
             try {
                 //通过URL的openStrean方法获取URL对象所表示的自愿字节输入流
                 InputStream is = url.openStream();
-                InputStreamReader isr = new InputStreamReader(is, "utf-8");
-                //为字符输入流添加缓冲
-                BufferedReader br = new BufferedReader(isr);
-                String data = br.readLine();//读取数据
-                while (data != null) {//循环读取数据
-//                    System.out.println(data);//输出数据
-                    m = r.matcher(data);
-                    if (m.find()) {
-//                        System.out.println(m.group(1));
-                        re+=m.group(1);
-                    }
-                    data = br.readLine();
+                ByteArrayOutputStream result = new ByteArrayOutputStream();
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = is.read(buffer)) != -1) {
+                    result.write(buffer, 0, length);
                 }
-                br.close();
-                isr.close();
+                read= result.toString(StandardCharsets.UTF_8.name());
+
                 is.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -205,13 +253,18 @@ public class getIssue {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        result.setIssueContent(re);
-        result.setUserName(username);
-        result.setProjectName(projectName);
-        result.setIssueId(issueId);
 
-        return result;
+        Pattern r = Pattern.compile(p);
+        Pattern r2 = Pattern.compile(p2);
+
+        m = r.matcher(read);
+        if (m.find()) {
+            issueEntity.setIssueContent(m.group());
+        }
+        m=r2.matcher(read);
+        if (m.find()) {
+            issueEntity.setIssueTitle(m.group());
+        }
+        return issueEntity;
     }
-
-
 }

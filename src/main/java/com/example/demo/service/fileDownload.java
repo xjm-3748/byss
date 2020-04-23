@@ -88,14 +88,14 @@ public class fileDownload {
 
 
 
-    public static void main(String[] args) {
-        try{
-            downLoadFromUrl("https://github.com/xjm-3748/HelloWorld/archive/master.zip",
-                    "demo.zip","E:\\ideaDownload\\fileDemo\\");
-        }catch (Exception e) {
-            System.out.println("wrrrrrrrrrrrr");
-            // TODO: handle exception
-        }
-    }
+//    public static void main(String[] args) {
+//        try{
+//            downLoadFromUrl("https://github.com/xjm-3748/HelloWorld/archive/master.zip",
+//                    "demo.zip","E:\\ideaDownload\\fileDemo\\");
+//        }catch (Exception e) {
+//            System.out.println("wrrrrrrrrrrrr");
+//            // TODO: handle exception
+//        }
+//    }
 
 }

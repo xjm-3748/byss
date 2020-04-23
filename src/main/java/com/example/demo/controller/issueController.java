@@ -5,6 +5,8 @@ import com.example.demo.model.IssueEntity;
 import com.example.demo.service.fileDownload;
 import com.example.demo.service.fileRead;
 import com.example.demo.service.getIssue;
+import com.example.demo.service.impl.issuemessageServiceImpl;
+import com.example.demo.service.issuemessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ import static com.example.demo.service.UZipFile.unZipFiles;
 public class issueController {
 	String path="E:\\ideaDownload\\fileDemo\\";
 	getIssue getIssueService=new getIssue();
+	issuemessageService issuemessageService=new issuemessageServiceImpl();
 
 
 //	@GetMapping("/a.html")
@@ -78,25 +81,40 @@ public class issueController {
 		String userName=(String) request.getSession().getAttribute("userName");
 		String projectName=(String) request.getSession().getAttribute("projectName");
 
-//		try {
-//			fileDownload.downLoadFromUrl("https://github.com/"
-//							+userName+"/"+projectName+"/archive/master.zip",userName+"；"+projectName+".zip"
-//					,"E:\\ideaDownload\\fileDemo\\");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//        File zipFile = new File("E:\\ideaDownload\\fileDemo\\"+userName+"；"+projectName+".zip");
-//        String path = "E:\\ideaDownload\\fileDemo\\uZip\\"+userName+"；"+projectName+"\\";
-//        File newFile=new File(path);
-//
-//        if(!newFile.exists()){
-//			newFile.mkdirs();
-//		}
-//        try {
-//            unZipFiles(zipFile, path);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+		try {
+			fileDownload.downLoadFromUrl("https://github.com/"
+							+userName+"/"+projectName+"/archive/master.zip",userName+"；"+projectName+".zip"
+					,"E:\\ideaDownload\\fileDemo\\");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        File zipFile = new File("E:\\ideaDownload\\fileDemo\\"+userName+"；"+projectName+".zip");
+        String path = "E:\\ideaDownload\\fileDemo\\uZip\\"+userName+"；"+projectName+"\\";
+        File newFile=new File(path);
+
+        if(!newFile.exists()){
+			newFile.mkdirs();
+		}
+
+        try {
+            unZipFiles(zipFile, path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
+        for(IssueEntity i:ls){
+
+//todo
+		}
+
+
+
+//		issuemessageService
+
+
+
+
+
         System.out.println(userName + projectName);
 	}
 
