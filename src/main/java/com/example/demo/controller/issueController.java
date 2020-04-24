@@ -20,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.example.demo.service.UZipFile.unZipFiles;
 
@@ -39,10 +36,11 @@ public class issueController {
 	@Resource
 	issueRepository  issueSql;
 
-//	@GetMapping("/a.html")
-//	public ModelAndView list() {
-//		return new ModelAndView("a");
-//	}
+	@GetMapping("/a.html")
+	public ModelAndView list() {
+		return index();
+	}
+
 	@GetMapping("")
 	public ModelAndView index() {
 		ModelAndView modelAndView=new ModelAndView("a");
@@ -144,7 +142,6 @@ public class issueController {
 			map.put("result","1");
 		}else
 			map.put("result","0");
-
 		return  map;
 	}
 
@@ -152,7 +149,9 @@ public class issueController {
 	public ModelAndView issueSet(HttpServletRequest request){
         String userName=(String) request.getSession().getAttribute("userName");
         String projectName=(String) request.getSession().getAttribute("projectName");
-        ArrayList<IssueEntity> issueList =getIssueService.getIssueList(userName,projectName);
+        List<IssueEntity> issueList =issueSql.findAllByUserNameAndProjectName(userName,projectName);
+//				getIssueService.getIssueList(userName,projectName);
+
         ModelAndView modelAndView = new ModelAndView( "fileShow" );
         modelAndView.addObject( "issueList", issueList );
         modelAndView.addObject( "nameOfProject", userName+projectName );

@@ -20,11 +20,11 @@ public class getIssue {
 //    private issueRepository issueRepository;
 
     public static void main(String[] args)  {
-        String useName="tikv";
-        String projectName="tikv";
+        String useName="HotBitmapGG";
+        String projectName="bilibili-android-client";
         getIssue g=new getIssue();
 //        ArrayList<IssueEntity>aaa=(g.getIssueList(useName,projectName));
-        g.getIssueContent(useName,projectName,"7626");
+        g.getIssueContent(useName,projectName,"69");
     }
 
     public boolean downloadIssueLog(){
@@ -225,13 +225,55 @@ public class getIssue {
 
 //        IssueEntity result=new IssueEntity();
         Id=Id.replaceAll(username,"").replace(projectName,"");
-        String  p="<td class=\"d-block comment-body markdown-body {2}js-comment-body\">\\s([\\s\\S]*)</td>";
-        String p2="(<title>)(.*)(</title>)";
-
+        String  p="(<td class=\"d-block comment-body markdown-body {2}js-comment-body\">)";
         Matcher m;
-        String re="";
-        String read="";
+        Pattern r = Pattern.compile(p);
+        Pattern end=Pattern.compile("</td>");
+        StringBuffer re=new StringBuffer();
+        try {
+            //创建一个URL实例
+                    URL url = new URL("https://github.com/"+username
+                            +"/"+projectName+"/issues/"+Id);
 
+            try {
+                int flag=-1;
+
+                //通过URL的openStrean方法获取URL对象所表示的自愿字节输入流
+                InputStream is = url.openStream();
+                InputStreamReader isr = new InputStreamReader(is, "utf-8");
+                //为字符输入流添加缓冲
+                BufferedReader br = new BufferedReader(isr);
+                String data = br.readLine();//读取数据
+                while (data != null) {//循环读取数据
+//                    System.out.println(data);//输出数据
+                    if(flag==-1){
+                        m = r.matcher(data);
+                        if (m.find()) {
+                            flag=0;
+                        }
+                    }else {
+                        m = end.matcher(data);
+                        if(m.find()){
+                            break;
+                        }
+                        re.append(data);
+//                                .replaceAll("<.+>",""));
+                    }
+                    data = br.readLine();
+                }
+                br.close();
+                isr.close();
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+//        System.out.println(re);
+        issueEntity.setIssueContent(re.toString());
+        String p2="(<title>)(.*)(</title>)";
+        String read="";
         try {
             //创建一个URL实例
             URL url = new URL("https://github.com/"+username
@@ -255,18 +297,12 @@ public class getIssue {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-        Pattern r = Pattern.compile(p);
         Pattern r2 = Pattern.compile(p2);
-
-        m = r.matcher(read);
-        if (m.find()) {
-            issueEntity.setIssueContent(m.group());
-        }
         m=r2.matcher(read);
         if (m.find()) {
-            issueEntity.setIssueTitle(m.group());
+            issueEntity.setIssueTitle(m.group(2).split("· Issue")[0]);
         }
+
         return issueEntity;
     }
 }

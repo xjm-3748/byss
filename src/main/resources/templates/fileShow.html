@@ -15,9 +15,19 @@
     <script src="../static/bootstrap-3.3.7-dist/js/libs/bootstrap.js" th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
 </head>
 <body style="background-image: none;">
+
+<ul>
+    <li><a class="active" href="a.html">主页</a></li>
+</ul>
 <div class="body_wrap">
     <div class="container">
-        <div class="alert alert-success text-center" role="alert" style="margin-top: 10%">issue 列表</div>
+
+        <div id ="div2" style ="margin-top: 100px;">
+            <h1><a href="/a.html" class="blacklink">bugSearch</a></h1>
+            <p class="subheading text-muted">一种基于ir方法的检测工具</p>
+
+        </div>
+        <div class="alert alert-success text-center" role="alert" style="margin-top: 0">issue 列表</div>
 
         <div >
             <!--                <h1  th:value="${}+${session.userName}"-->
@@ -44,6 +54,23 @@
     </div>
     <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
 </div>
+<style>
+    h1 {
+            font-family: 'Marcellus SC', Times, serif;
+            font-size: 60px;
+            letter-spacing: 0.6em;
+            text-align: center;
+            padding-left: 0.7em; 
+            /* Required for centering */
+        }
+        a.blacklink {
+            color: #000000;
+        }
+        .subheading {
+            letter-spacing: 0.4em;
+            text-align: center;
+        }
+</style>
 
 <script>
 

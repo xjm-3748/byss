@@ -2,11 +2,9 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="vue.js"></script>
-
+     <link rel="stylesheet" href="../static/bootstrap-3.3.7-dist/css/bootstrap.css" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.css}" />
+    <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+    <script src="../static/bootstrap-3.3.7-dist/js/libs/bootstrap.js" th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
 
 
     <title>bugSearch</title>
@@ -34,7 +32,8 @@
             font-size: 60px;
             letter-spacing: 0.6em;
             text-align: center;
-            padding-left: 0.7em; /* Required for centering */
+            padding-left: 0.7em; 
+            /* Required for centering */
         }
         a.blacklink {
             color: #000000;
@@ -172,9 +171,7 @@
 <body>
 
 <ul>
-    <li><a class="active" href="#home">主页</a></li>
-    <li><a href="#news">新闻</a></li>
-
+    <li><a class="active" href="a.html">主页</a></li>
 </ul>
 
 <!--<div id="div1">   <img id="icon" src="img/1.jpg" class="img-circle"></div>-->
