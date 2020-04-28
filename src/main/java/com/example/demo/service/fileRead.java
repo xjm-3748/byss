@@ -8,24 +8,29 @@ import java.util.ArrayList;
 public class fileRead {
 
     public static String getFile()  {
+
+            return  getFile("E:\\ideaDownload\\fileDemo\\temp");
+    }
+
+    public static String getFile(String fileName)  {
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new FileReader("E:\\ideaDownload\\fileDemo\\temp"));
+            in = new BufferedReader(new FileReader(fileName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         String str="";
-            StringBuffer strBuffer=new StringBuffer();
-            while (true) {
-                try {
-                    if ((str = in.readLine()) == null) break;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                strBuffer.append("<p>"+str+"</p>");
+        StringBuilder strBuffer=new StringBuilder();
+        while (true) {
+            try {
+                if ((str = in.readLine()) == null) break;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            strBuffer.append("<p>").append(str).append("</p>");
+        }
 //            System.out.println(strBuffer);
-            return  strBuffer.toString();
+        return  strBuffer.toString();
     }
 
     public  static ArrayList<String> getFileList(String strPath){

@@ -1,4 +1,3 @@
-
 package com.example.demo.controller;
 
 import com.example.demo.Repository.gitProjectRepository;
@@ -161,17 +160,16 @@ public class issueController {
 
 	@RequestMapping("/issueDetail")
 	public ModelAndView issueDetail(HttpServletRequest request){
+		String issueId =(String) request.getSession().getAttribute("issueId");
 
 //		String userName=(String) request.getSession().getAttribute("userName");
 //		String projectName=(String) request.getSession().getAttribute("projectName");
-		String issueId =(String) request.getSession().getAttribute("issueId");
 //		String issueTitle=(String) request.getSession().getAttribute("issueId");
 
 //		ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
 
 //		IssueEntity i=new IssueEntity();
 //		i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
-		//todo
         IssueEntity i=issueSql.findById(issueId).get();
 		request.getSession().setAttribute("issueMessage",i);
 
@@ -198,10 +196,9 @@ public class issueController {
 
 	@RequestMapping("/readFile")
 	public ModelAndView readFile(HttpServletRequest request){
-
 		String fileName=(String) request.getSession().getAttribute("fileName");
 		System.out.println(fileName);
-		//todo 写入到temp中去
+		//todo 只要是真实文件应该就ok
 
 		String code=fileRead.getFile();
 		System.out.println("issueDetail");
@@ -209,8 +206,6 @@ public class issueController {
 		mav.addObject("code",code);
 		return mav;
 	}
-
-
 
 }
 
