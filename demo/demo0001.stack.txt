@@ -1,0 +1,14 @@
+org.eclipse.core.internal.resources.ResourceException
+:
+Resource /org.eclipse.jdt.launching/.classpath is not local.
+org.eclipse.core.internal.resources.Resource.checkLocal(Resource.java:307)
+org.eclipse.core.internal.resources.File.getContents(File.java:213)
+org.eclipse.jdt.internal.core.Util.getResourceContentsAsByteArray(Util.java:677)
+org.eclipse.jdt.internal.core.JavaProject.getSharedProperty(JavaProject.java:1809)
+org.eclipse.jdt.internal.core.JavaProject.readClasspathFile(JavaProject.java:2105)
+org.eclipse.jdt.internal.core.JavaProject.getRawClasspath(JavaProject.java:1593)
+org.eclipse.jdt.internal.core.JavaProject.getRawClasspath(JavaProject.java:1583)
+org.eclipse.jdt.internal.core.JavaProject.getOutputLocation(JavaProject.java:1375)
+org.eclipse.jdt.internal.core.search.indexing.IndexAllProject.execute(IndexAllProject.java:90)
+org.eclipse.jdt.internal.core.search.processing.JobManager.run(JobManager.java:375)
+java.lang.Thread.run(Thread.java:536)

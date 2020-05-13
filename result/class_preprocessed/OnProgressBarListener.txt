@@ -1,0 +1,1 @@
+packag hotbitmapgg bilibili widget progressbar public interfac progress bar listen void progress chang int current int max 

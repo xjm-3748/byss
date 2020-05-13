@@ -1,0 +1,1 @@
+packag hotbitmapgg bilibili util import android content context import android content intent creat hcc public class share util public static void share link string url string titl context context intent intent intent intent intent set type text plain intent put extra intent intent put extra intent git hub url context start activ intent creat chooser intent titl 

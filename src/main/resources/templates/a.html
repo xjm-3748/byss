@@ -110,7 +110,7 @@
             </tr> -->
             
             <tr th:each="userProjectName: ${alreadyFileList}" class="text-info" style="border-right: 5px solid  black;">
-                <td th:text="${userProjectName}" id="linkToIssue" >course_Name</td>
+                <td th:text="${userProjectName.projectName}" id="linkToIssue" >course_Name</td>
 <!--                <td th:text="${issue.content} " >content</td>-->
             </tr>
         </table>

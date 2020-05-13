@@ -69,8 +69,13 @@ ul {
             <p>
                 作者：<span th:text="${session.userName}"></span>
                 项目名：<span th:text="${session.projectName}"></span>
-
+                如需更新，点击这里
+                <button id="refresh"  type="button" class="btn  btn-info">refresh</button>
             </p>
+
+
+
+
         </div>
 
         <table class="table table-striped table-bordered" id="tableA" >
@@ -94,7 +99,7 @@ ul {
             font-size: 60px;
             letter-spacing: 0.6em;
             text-align: center;
-            padding-left: 0.7em; 
+            padding-left: 0.7em;
             /* Required for centering */
         }
         a.blacklink {
@@ -105,10 +110,22 @@ ul {
             text-align: center;
         }
 </style>
-
 <script>
-
     $(function() {
+        $("#refresh").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/downloadAndUnzip",
+                data: {
+                //         "issueId": issueId,
+                // "issueTitle": issueTitle
+                },
+                success: function () {
+                    window.location.reload();
+                }
+            });
+
+        });
         $(".linkToDetail").click(function () {
             var issueId = $(this).parents("tr").children("td:nth-child(1)").text();
             var issueTitle = $(this).parents("tr").children("td:nth-child(2)").text();

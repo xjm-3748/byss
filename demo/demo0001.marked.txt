@@ -1,0 +1,233 @@
+$natural$Discussion ECLIPSE BUG 39887$$
+
+$natural$Wassim Melhem 2003-07-10 14:27:07 EDT$$
+$natural$Build: I-20030710$$
+$natural$I found the exception pasted below in my log file.  Note that$$
+$natural$org.eclipse.debug.core/.classpath is indeed in my workspace.$$
+
+
+$natural$Comment 1 Philippe Mulet 2003-07-14 07:51:18 EDT$$
+$natural$Exceptions come from platform, the file claims to not be local.$$
+$natural$How did the classpath file get created ? Imported through CVS or created$$
+$natural$through PDE import ?$$
+
+$natural$Comment 2 Wassim Melhem 2003-07-14 09:56:12 EDT$$
+$natural$The classpath file in question was created during the PDE import operation.$$
+
+$natural$Comment 3 Frederic Fusier 2003-08-29 12:02:39 EDT$$
+
+$natural$*** Bug 41859 has been marked as a duplicate of this bug. ***$$
+
+$natural$Comment 4 Frederic Fusier 2003-09-01 06:26:46 EDT$$
+$natural$Hello Wassim,$$
+$natural$Wasn't it funny to work again together in Eclipse project after WMQI? ;)$$
+$natural$I'm currently tracking this bug but have lot of difficulties to recreate it.$$
+$natural$I've imported 58 external plugins several times and never got this exception...$$
+$natural$Would it be possible to have your test case or a more precise idea of a$$
+$natural$scenario to reproduce this problem and have a chance to understand what happen$$
+$natural$here?$$
+$natural$Thanks$$
+
+$natural$Comment 5 Wassim Melhem 2003-09-01 14:50:48 EDT$$
+$natural$Frederic,$$
+$natural$You and I worked on the same project such a long time ago that WMQI was still$$
+$natural$called MQSI ;-)$$
+
+$natural$This bug is difficult to reproduce, as I think it has to do with timing.$$
+$natural$However, it did happen to me more than once.$$
+
+$natural$I think this bug has to do with the two-stage plug-in import operation, and$$
+$natural$the fact that half-way through the operation, JDT core and PDE are fighting$$
+$natural$for cpu time.$$
+
+$natural$Below is a modified excerpt of a note that I sent to Philippe as a follow-up$$
+$natural$to the then-critical bug 37274.  The note explains what happens during import,$$
+$natural$and with an appendix explaining what I think could be causing this particular$$
+$natural$bug.$$
+
+
+$natural$Here is a breakdown of the activities that take place during the plug-in$$
+$natural$import operation:$$
+
+$natural$1. If autobuilding is on, we turn it off.$$
+
+$natural$2. We import all the plug-ins selected in the import wizard and create a Java$$
+$natural$project for each plug-in that contains libraries.  Note that at this step, we$$
+$natural$used to clear the classpath of the freshly created Java project because we$$
+$natural$will correctly set it at a later step.  However, just before we released 2.1,$$
+$natural$Philippe suggested in bug report 34574 that we do not flush the classpath$$
+$natural$completely.  So we stopped flushing the classpath at this point, and this$$
+$natural$introduced the transient error markers that we now see in the Problems view in$$
+$natural$the middle of the operation.  Since these error markers go away later in step$$
+$natural$3 when we set the classpath, we regarded them as benign, yet still annoying,$$
+$natural$intermediary entities.  This step is done in an IWorkspace.run$$
+$natural$(IWorkspaceRunnable, IProgressMonitor) operation.$$
+
+$natural$3. We set the classpath of all the projects that were succesfully imported$$
+$natural$into the workspace. This step has to be done in a subsequent IWorkspace.run$$
+$natural$(IWorkspaceRunnable, IProgressMonitor) operation for an accurate classpath$$
+$natural$computation.  i.e. the Java projects from step 2 have to become part of the$$
+$natural$workspace before we set their classpath.$$
+
+$natural$4.  If we had turned autobuilding off in step 1, we turn it back on and invoke$$
+$natural$a build via PDEPlugin.getWorkspace().build$$
+$natural$(IncrementalProjectBuilder.INCREMENTAL_BUILD,new SubProgressMonitor$$
+$code$(monitor,1));$$
+
+$natural$Note that after step 2, JDT core and PDE start doing stuff simultaneously and$$
+$natural$competing for CPU (bug 31592).  JDT starts the indexing work, while PDE starts$$
+$natural$setting classpaths.  So what I think might happening in this instance is that$$
+$natural$JDT wants to index the classpath file for org.eclipse.debug.core before PDE$$
+$natural$had a chance to create it or set it.$$
+
+$natural$Comment 6 Philippe Mulet 2003-09-03 05:58:08 EDT$$
+$natural$What is suspicious though is that if you did not flush the classpath, then the$$
+$natural$file should live on disk, and should be readable. However the platform refuses$$
+$natural$to let us access it.$$
+
+$natural$Anyway, since this is only a logging problem, and we believe our indexer$$
+$natural$activity should be fault tolerant (given it is running after the fact), we$$
+$natural$modified our code to be more resilient in this scenario, and stop logging this$$
+$natural$problem, which isn't one in the end.$$
+
+$natural$Fixed$$
+
+$natural$Comment 7 Frederic Fusier 2003-09-03 11:54:25 EDT$$
+$natural$While testing PDE external plugins import, I got another similar exception in$$
+$natural$the indexer:$$
+$natural$!ENTRY org.eclipse.jdt.core 4 4 Sep 03, 2003 17:02:24.860$$
+$natural$!MESSAGE Exception while retrieving /org.eclipse.jdt.launching/.classpath, will$$
+$natural$revert to default classpath$$
+$natural$!STACK 1$$
+$stack$org.eclipse.core.internal.resources.ResourceException:$$
+$stack$Resource /org.eclipse.jdt.launching/.classpath is not local.$$
+$stack$	at org.eclipse.core.internal.resources.Resource.checkLocal$$
+$stack$(Resource.java:307)$$
+$stack$	at org.eclipse.core.internal.resources.File.getContents(File.java:213)$$
+$stack$	at org.eclipse.jdt.internal.core.Util.getResourceContentsAsByteArray$$
+$stack$(Util.java:677)$$
+$stack$	at org.eclipse.jdt.internal.core.JavaProject.getSharedProperty$$
+$stack$(JavaProject.java:1809)$$
+$stack$	at org.eclipse.jdt.internal.core.JavaProject.readClasspathFile$$
+$stack$(JavaProject.java:2105)$$
+$stack$	at org.eclipse.jdt.internal.core.JavaProject.getRawClasspath$$
+$stack$(JavaProject.java:1593)$$
+$stack$	at org.eclipse.jdt.internal.core.JavaProject.getRawClasspath$$
+$stack$(JavaProject.java:1583)$$
+$stack$	at org.eclipse.jdt.internal.core.JavaProject.getOutputLocation$$
+$stack$(JavaProject.java:1375)$$
+$stack$	at org.eclipse.jdt.internal.core.search.indexing.IndexAllProject.execute$$
+$stack$(IndexAllProject.java:90)$$
+$stack$	at org.eclipse.jdt.internal.core.search.processing.JobManager.run$$
+$stack$(JobManager.java:375)$$
+$stack$	at java.lang.Thread.run(Thread.java:536)$$
+$natural$!ENTRY org.eclipse.core.resources 4 369 Sep 03, 2003 17:02:24.860$$
+$natural$!MESSAGE Resource /org.eclipse.jdt.launching/.classpath is not local.$$
+
+$natural$Comment 8 Frederic Fusier 2003-09-03 11:56:53 EDT$$
+$natural$Created attachment 5960 [details]$$
+$natural$Fix also exception raised while getting output location$$
+
+$natural$We have similar problem with output location than with raw classpath getter$$
+$natural$=> apply similar solution.$$
+
+$natural$Comment 9 Frederic Fusier 2003-09-04 05:07:16 EDT$$
+$natural$Wassim,$$
+
+$natural$About the unnecessary markers displayed between step2 and step3, there's$$
+$natural$nothing we can do avoid them as the projects were created without classpath$$
+$natural$during step 2. At the end of the operation performed while this step, a$$
+$natural$PRE_AUTO_BUILD event is sent and processed by our DeltaProcessor which$$
+$natural$refreshes all markers of resources concerned by the delta.$$
+
+$natural$As these resources are the created and they have no .classpath file, there's$$
+$natural$automatically a  marker created to signal this problem.$$
+
+$natural$I think there are two solutions here to have these markers not displayed:$$
+
+$natural$1) perform the import in only one operation as suggested by bug 31592$$
+$natural$2) add a temporary .classpth to the project to avoid markers creation while$$
+$natural$treating PRE_AUTO_BUILD event between the two operation$$
+
+
+$natural$I'm not sure if solution 1) is possible, but I've made a try to implement$$
+$natural$solution 2) by modifying method createProject(...) in PluginImportOperation$$
+$natural$class.$$
+$natural$I've replace following code:$$
+$code$if (isJavaProject) {$$
+$code$	/*IJavaProject jProject = JavaCore.create(project);$$
+$code$	if (jProject.getRawClasspath() != null$$
+$code$		&& jProject.getRawClasspath().length > 0)$$
+$code$		jProject.setRawClasspath(new IClasspathEntry[0], monitor);*/$$
+$code$	modelIds.add(model.getPluginBase().getId());$$
+$code$}$$
+
+$natural$with:$$
+$code$if (isJavaProject) {$$
+$code$	IJavaProject jProject = JavaCore.create(project);$$
+$code$	jProject.setRawClasspath(new IClasspathEntry[0], project.getFullPath(),$$
+$code$monitor);$$
+$code$	modelIds.add(model.getPluginBase().getId());$$
+$code$}$$
+
+$natural$And it seems to work properly (import does not hang and no markers are$$
+$natural$displayed bewteen two steps).$$
+
+$natural$May you let me know if you get same result with this change?$$
+
+$natural$Thanks$$
+
+$natural$Comment 10 Frederic Fusier 2003-09-04 05:19:40 EDT$$
+$natural$Wassim,$$
+
+$natural$About markers displayed between step 2 and step 3 there's nothing to do on our$$
+$natural$side about it. At the end of step 2, a PRE_AUTO_BUILD event is sent by the$$
+$natural$running operation and processed by our DeltaProcessor which refreshes markers.$$
+
+$natural$As project were created in step 2 without classpath, then we correctly create a$$
+$natural$markers for each concerned project that its .classpath cannot be read.$$
+
+$natural$As it seems necessary to keep the two separated operations, I suggest to set$$
+$natural$the classpath to the created project in order to avoid these markers to be$$
+$natural$displayed.$$
+
+$natural$I've made a try modifying createProject(...) method of PluginImportOperation.$$
+$natural$At the end of the method I've changed the if(isJavaProject) block as follow:$$
+$code$if (isJavaProject) {$$
+$code$	IJavaProject jProject = JavaCore.create(project);$$
+$code$	jProject.setRawClasspath(new IClasspathEntry[0], project.getFullPath(),$$
+$code$monitor);$$
+$code$	modelIds.add(model.getPluginBase().getId());$$
+$code$}$$
+
+$natural$After that, I've made several import operation with new or replacing projects$$
+$natural$and never got any dead lock nor transient error markers :)$$
+
+$natural$Let me know if this change could be acceptable for you, thanks$$
+
+$natural$Fr??ic$$
+
+$natural$Comment 11 Philippe Mulet 2003-09-04 05:23:45 EDT$$
+$natural$Transient classpath problem markers are expected due to the PDE import process,$$
+$natural$and should be avoided so as to improve user experience, but this is on the PDE$$
+$natural$side only.$$
+
+$natural$Integrated fix for output location as well.$$
+$natural$Fixed.$$
+
+$natural$Comment 12 Wassim Melhem 2003-09-04 12:43:46 EDT$$
+$natural$Frederic,$$
+$natural$Your suggested fix is exactly what I had once upon time, but this solution,$$
+$natural$which is perfect for me, seems to have caused unnecessary re-indexing for JDT$$
+$natural$core (bug 34574).  Are you suggesting that it is no longer a problem for JDT$$
+$natural$Core if I flush the classpath completely?$$
+
+$natural$Comment 13 Philippe Mulet 2003-09-05 06:28:36 EDT$$
+$natural$We think we have corrected the exposed problem on JDT side by 2.1, this being$$
+$natural$said it triggers quite a lot of activity in an intermediate state, so I am no$$
+$natural$longer convinced it is the best move.$$
+
+$natural$Still worth investigating though, as it could avoid creating transient problems.$$
+
+$natural$Comment 14 David Audel 2003-10-14 10:13:14 EDT$$
+$stack$Verified.$$

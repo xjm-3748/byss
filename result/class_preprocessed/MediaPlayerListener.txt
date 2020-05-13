@@ -1,0 +1,1 @@
+packag hotbitmapgg bilibili media callback creat hcc public interfac media player listen void start void paus int durat int current posit void seek long pos boolean play int buffer percentag boolean paus 

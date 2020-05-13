@@ -271,7 +271,10 @@ public class getIssue {
             e.printStackTrace();
         }
 //        System.out.println(re);
-        issueEntity.setIssueContent(re.toString());
+
+        issueEntity.setIssueContent(re.toString().replaceAll("<br>","\n").replaceAll("<[^>]+>",""));
+
+
         String p2="(<title>)(.*)(</title>)";
         String read="";
         try {

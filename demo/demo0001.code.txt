@@ -1,0 +1,20 @@
+(monitor,1));
+if (isJavaProject) {
+	/*IJavaProject jProject = JavaCore.create(project);
+	if (jProject.getRawClasspath() != null
+		&& jProject.getRawClasspath().length > 0)
+		jProject.setRawClasspath(new IClasspathEntry[0], monitor);*/
+	modelIds.add(model.getPluginBase().getId());
+}
+if (isJavaProject) {
+	IJavaProject jProject = JavaCore.create(project);
+	jProject.setRawClasspath(new IClasspathEntry[0], project.getFullPath(),
+monitor);
+	modelIds.add(model.getPluginBase().getId());
+}
+if (isJavaProject) {
+	IJavaProject jProject = JavaCore.create(project);
+	jProject.setRawClasspath(new IClasspathEntry[0], project.getFullPath(),
+monitor);
+	modelIds.add(model.getPluginBase().getId());
+}

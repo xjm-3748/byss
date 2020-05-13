@@ -1,0 +1,1 @@
+packag hotbitmapgg bilibili widget banner creat hcc banner public class banner entiti public string titl public string img public string link public banner entiti string link string titl string img link link titl titl img img 

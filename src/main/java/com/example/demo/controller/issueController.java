@@ -43,8 +43,9 @@ public class issueController {
 	@GetMapping("")
 	public ModelAndView index() {
 		ModelAndView modelAndView=new ModelAndView("a");
-		modelAndView.addObject("alreadyFileList",fileRead.getFileList(path+"uZip"));
+		List<GitprojectEntity> alread=gitProjectRepositorythis.findAll();
 
+		modelAndView.addObject("alreadyFileList",alread);
 		return modelAndView;
 	}
 
@@ -114,7 +115,7 @@ public class issueController {
 //		issuemessageService
 		GitprojectEntity gitprojectEntity=new GitprojectEntity();
 //		gitprojectEntity.setUserName(userName);
-		gitprojectEntity.setProjectName(userName+projectName);
+		gitprojectEntity.setProjectName(userName+"/"+projectName);
         gitProjectRepositorythis.save(gitprojectEntity);
         System.out.println(userName + projectName+"downloadAndUnzip");
 	}
@@ -137,7 +138,7 @@ public class issueController {
 		Map<String,Object> map =new HashMap<String,Object>();
 		GitprojectEntity g=new GitprojectEntity();
 		g.setProjectName(userName+projectName);
-		if(gitProjectRepositorythis.existsById(userName+projectName)){
+		if(gitProjectRepositorythis.existsById(userName+"/"+projectName)){
 			map.put("result","1");
 		}else
 			map.put("result","0");
@@ -197,14 +198,24 @@ public class issueController {
 	@RequestMapping("/readFile")
 	public ModelAndView readFile(HttpServletRequest request){
 		String fileName=(String) request.getSession().getAttribute("fileName");
-		System.out.println(fileName);
+        IssueEntity IssueE=(IssueEntity ) request.getSession().getAttribute("issueMessage");
+//        String []contentList=IssueE.getIssueContent().split("\n");
+//        for(int i=0;i<contentList.length;i++){
+//            contentList[i]=(int)(Math.random()*3)+contentList[i];
+//        }
+//		System.out.println(fileName);
 		//todo 只要是真实文件应该就ok
+		// 在这里修改issueE作为实体
 
-		String code=fileRead.getFile();
-		System.out.println("issueDetail");
+		String code=fileRead.getFile
+                ("E:\\ideaDownload\\fileDemo\\uZip\\yangchong211；YCLiveDataBus\\YCLiveDataBus-master\\app\\src\\main\\java\\com\\ycbjie\\yclivedatabus\\constant\\Constant.java");
+		// todo 可以在这里修改code
+
 		ModelAndView mav=new ModelAndView( "readFile" );
 		mav.addObject("code",code);
-		return mav;
+        mav.addObject("issueShow",IssueE);
+
+        return mav;
 	}
 
 }

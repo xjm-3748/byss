@@ -1,0 +1,1 @@
+packag hotbitmapgg bilibili network api import hotbitmapgg bilibili entiti discov vip game info import retrofit http import observ creat hcc api public interfac vip servic api game gift access key cad action key appkey appkey build devic phone mobi app iphon platform io sign observ vip game info vip game 
