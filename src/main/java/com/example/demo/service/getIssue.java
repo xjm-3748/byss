@@ -234,7 +234,6 @@ public class getIssue {
             //创建一个URL实例
                     URL url = new URL("https://github.com/"+username
                             +"/"+projectName+"/issues/"+Id);
-
             try {
                 int flag=-1;
 
@@ -305,7 +304,6 @@ public class getIssue {
         if (m.find()) {
             issueEntity.setIssueTitle(m.group(2).split("· Issue")[0]);
         }
-
         return issueEntity;
     }
 }

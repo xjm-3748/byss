@@ -1,6 +1,6 @@
 // * Java_CodeDB.txt
 // * @author Nicolas Bettenburg
-// * © 2009-2010, all rights reserved.
+// * ? 2009-2010, all rights reserved.
 // ********************************************************************
 // *  This file is part of infoZilla.                                 *
 // *                                                                  *

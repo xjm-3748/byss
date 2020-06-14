@@ -110,7 +110,7 @@
             </tr> -->
             
             <tr th:each="userProjectName: ${alreadyFileList}" class="text-info" style="border-right: 5px solid  black;">
-                <td th:text="${userProjectName.projectName}" id="linkToIssue" >course_Name</td>
+                <td th:text="${userProjectName.projectName}" class="linkToIssue" >course_Name</td>
 <!--                <td th:text="${issue.content} " >content</td>-->
             </tr>
         </table>
@@ -146,7 +146,7 @@
 
 <script>
     $(function() {
-        $("#linkToIssue").click(function () {
+        $(".linkToIssue").click(function () {
             var userProjectName = $(this).text();
             var userName=userProjectName.split("/")[0];
             var ProjectName=userProjectName.split("/")[1];

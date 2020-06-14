@@ -32,6 +32,29 @@ public class fileRead {
         return  strBuffer.toString();
     }
 
+    public static String getFileWithLine(String fileName)  {
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(fileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String str="";
+        StringBuilder strBuffer=new StringBuilder();
+        int lineIndex=1;
+        while (true) {
+            try {
+                if ((str = in.readLine()) == null) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            strBuffer.append("<p>").append(lineIndex).append("   ").append(str).append("</p>");
+            lineIndex++;
+        }
+//            System.out.println(strBuffer);
+        return  strBuffer.toString();
+    }
+
     public  static ArrayList<String> getFileList(String strPath){
         ArrayList<String> fileList=new ArrayList<>();
         File fileDir = new File(strPath);

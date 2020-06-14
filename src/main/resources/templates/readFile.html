@@ -62,12 +62,22 @@
 
     </div>
     
-    <div class="col-md-2" style="background-color: white"></div>
+    <!-- <div class="col-md-2" style="background-color: white"></div> -->
     <div class="col-md-8" style="background-color: white">
-        <div class="col-md-2" style="background-color: white"></div>
-    <div class="alert alert-success text-center" role="alert" >这里可以修改提示颜色</div>
-    
+    <div class="col-md-2" style="background-color: white"></div>
+    <!-- <div class="display-flex"> -->
+        <div style="float: left;width: 10;color: white;">aaa           </div> 
+        <div style="width: 10px; height: 10px;background-color: red ;float: left;"></div>
+         <div style="float: left;width: 30;">nature language           </div> 
+         <div style="float: left;width: 10;color: white;">aaa           </div> 
+         <div style="width: 10px; height: 10px;background-color: blue ;float: left;"> </div> <div style="float: left;">code</div> 
+         <div style="float: left;width: 10;color: white;">aaa           </div> 
+         <div style="width: 10px; height: 10px;background-color: blueviolet ;float: left;"> </div> <div style="float: left;">stack trees</div> 
+    <!-- </div> -->
+      
     </div>
+    <div class="col-md-2" style="background-color: white"></div>
+
     <div >
         <!--                <h1  th:value="${}+${session.userName}"-->
         <!--                  class="form-control input-medium"></h1>-->
@@ -111,7 +121,7 @@
 <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
 </div> -->
 <style>
-h1 {
+    h1 {
         font-family: 'Marcellus SC', Times, serif;
         font-size: 60px;
         letter-spacing: 0.6em;
@@ -126,6 +136,16 @@ h1 {
         letter-spacing: 0.4em;
         text-align: center;
     }
+    .natural{
+       color: red;
+    }
+    .code{
+        color:blue;
+    }
+    .stack{
+        color: blueviolet;
+    }
+
 </style>
 
 
