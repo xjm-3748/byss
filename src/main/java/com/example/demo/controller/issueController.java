@@ -4,14 +4,13 @@ import com.example.demo.Repository.gitProjectRepository;
 import com.example.demo.Repository.issueRepository;
 import com.example.demo.model.GitprojectEntity;
 import com.example.demo.model.IssueEntity;
-import com.example.demo.service.fileDownload;
-import com.example.demo.service.fileRead;
-import com.example.demo.service.getIssue;
+import com.example.demo.model.fileReaderEntity;
+import com.example.demo.service.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -19,11 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 
 import static com.example.demo.service.UZipFile.unZipFiles;
 
 @Controller
+@CrossOrigin
 @RequestMapping("/")
 public class issueController {
 	String path="E:\\ideaDownload\\fileDemo\\";
@@ -34,6 +35,8 @@ public class issueController {
 	gitProjectRepository gitProjectRepositorythis;
 	@Resource
 	issueRepository  issueSql;
+	@Resource
+	getTopTen getTopTenService;
 
 	@GetMapping("/a.html")
 	public ModelAndView list() {
@@ -99,7 +102,6 @@ public class issueController {
         if(!newFile.exists()){
 			newFile.mkdirs();
 		}
-
         try {
             unZipFiles(zipFile, path);
         } catch (IOException e) {
@@ -116,6 +118,11 @@ public class issueController {
 		GitprojectEntity gitprojectEntity=new GitprojectEntity();
 //		gitprojectEntity.setUserName(userName);
 		gitprojectEntity.setProjectName(userName+"/"+projectName);
+		gitprojectEntity.setUserName(userName);
+		gitprojectEntity.setShortProjectName(projectName);
+//		Timestamp t=new Timestamp(System.nanoTime());
+		gitprojectEntity.setAddDate( new Timestamp(System.currentTimeMillis()));
+
         gitProjectRepositorythis.save(gitprojectEntity);
         System.out.println(userName + projectName+"downloadAndUnzip");
 	}
@@ -163,32 +170,19 @@ public class issueController {
 	public ModelAndView issueDetail(HttpServletRequest request){
 		String issueId =(String) request.getSession().getAttribute("issueId");
 
-//		String userName=(String) request.getSession().getAttribute("userName");
-//		String projectName=(String) request.getSession().getAttribute("projectName");
-//		String issueTitle=(String) request.getSession().getAttribute("issueId");
-
-//		ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName);
-
-//		IssueEntity i=new IssueEntity();
-//		i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
+		String userName=(String) request.getSession().getAttribute("userName");
+		String projectName=(String) request.getSession().getAttribute("projectName");
         IssueEntity i=issueSql.findById(issueId).get();
 		request.getSession().setAttribute("issueMessage",i);
 
-		//		for(IssueEntity i :ls){
-//			if(i.getIssueId().equals(issueId)){
-//				i.setIssueContent(getIssueService.getIssueContent(userName,projectName,issueId));
-//				break;
-//			}
-//		}
-		System.out.println("issueDetail");
+		String filePath=path+"uZip\\"+userName+"；"+projectName;
 
-		//todo 找到对应文件列表
-		ArrayList<String>fileList=new ArrayList<>();
-		fileList.add("fileA.txt");
-		fileList.add("eeee.txt");
-		fileList.add("bbbb.txt");
-		fileList.add("ccccc.txt");
-		fileList.add("EEEE.txt");
+		ArrayList<String> temp=getTopTenService.getFileList(i.getIssueContent(),filePath);
+
+		ArrayList<String> fileList=new ArrayList<>();
+		for(String it:temp){
+			fileList.add(it.substring(filePath.length()+1));
+		}
 		ModelAndView mav=new ModelAndView( "issueDetail" );
 		mav.addObject("fileList",fileList);
 		return mav;
@@ -198,25 +192,164 @@ public class issueController {
 	@RequestMapping("/readFile")
 	public ModelAndView readFile(HttpServletRequest request){
 		String fileName=(String) request.getSession().getAttribute("fileName");
-        IssueEntity IssueE=(IssueEntity ) request.getSession().getAttribute("issueMessage");
-//        String []contentList=IssueE.getIssueContent().split("\n");
-//        for(int i=0;i<contentList.length;i++){
-//            contentList[i]=(int)(Math.random()*3)+contentList[i];
-//        }
-//		System.out.println(fileName);
-		//todo 只要是真实文件应该就ok
-		// 在这里修改issueE作为实体
+        IssueEntity IssueE=(IssueEntity) request.getSession().getAttribute("issueMessage");
+//		String userName=(String) request.getSession().getAttribute("userName");
+//		String projectName=(String) request.getSession().getAttribute("projectName");
 
-		String code=fileRead.getFile
-                ("E:\\ideaDownload\\fileDemo\\uZip\\yangchong211；YCLiveDataBus\\YCLiveDataBus-master\\app\\src\\main\\java\\com\\ycbjie\\yclivedatabus\\constant\\Constant.java");
-		// todo 可以在这里修改code
+		String contentColour=getTopTenService.getColourIssue();
+		IssueE.setIssueContent(contentColour);
+		System.out.println(fileName);
+        String[] fileLastName = fileName.split("\\\\");
+
+		String code=	fileRead.getFile
+                ("result\\colored_class\\"+fileLastName[fileLastName.length-1]);
+		code=code.replaceAll("\\$natural\\$","<span class=\"natural\">").replaceAll("\\$\\$","</span>");
+
+		code=code.replaceAll("\\$stack\\$","<span class=\"stack\">");
+		code=code.replaceAll("\\$code\\$","<span class=\"code\">");
+
 
 		ModelAndView mav=new ModelAndView( "readFile" );
 		mav.addObject("code",code);
         mav.addObject("issueShow",IssueE);
-
         return mav;
 	}
+
+	@CrossOrigin
+	@RequestMapping(value ="/readColorFileContent",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public fileReaderEntity  getColorFile(
+			@RequestParam("fileName") String fileName,
+			@RequestParam("issueId") String issueId){
+
+		String contentColour=getTopTenService.getColourIssue();
+		contentColour=contentColour.replaceAll("\\$natural\\$","<span class=\"natural\">").replaceAll("\\$\\$","</span>");
+
+		contentColour=contentColour.replaceAll("\\$stack\\$","<span class=\"stack\">");
+		contentColour=contentColour.replaceAll("\\$code\\$","<span class=\"code\">");
+
+
+		System.out.println(fileName);
+		String[] fileLastName = fileName.split("\\\\");
+		String code=	fileRead.getFileWithLine
+				("result\\colored_class\\"+fileLastName[fileLastName.length-1]);
+		code=code.replaceAll("\\$natural\\$","<span class=\"natural\">").replaceAll("\\$\\$","</span>");
+
+		code=code.replaceAll("\\$stack\\$","<span class=\"stack\">");
+		code=code.replaceAll("\\$code\\$","<span class=\"code\">");
+
+
+
+		fileReaderEntity f=new fileReaderEntity();
+		f.setFileName(contentColour);
+		f.setFileContent(code);
+		return f;
+	}
+
+
+	@CrossOrigin
+	@RequestMapping(value ="/jsonIssueList",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<IssueEntity>jsonIssueList(
+			@RequestParam("userName") String userName,
+			@RequestParam("projectName") String projectName
+	){
+		System.out.println("issue huo qu");
+
+		return  issueSql.findAllByUserNameAndProjectName(userName,projectName);
+	}
+
+
+	@CrossOrigin
+	@RequestMapping(value ="/jsonGetProjectList",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<GitprojectEntity>jsonGetProjectList(
+	){
+		return  gitProjectRepositorythis.findAll();
+
+	}
+
+
+	@CrossOrigin
+	@RequestMapping(value = "/vueDownload",method = RequestMethod.GET)
+	@ResponseBody
+	public void vueDownload(@RequestParam("userName") String userName,
+							@RequestParam("projectName") String projectName) {
+		System.out.println("xiazai ");
+//		try {
+//			fileDownload.downLoadFromUrl("https://github.com/"
+//							+userName+"/"+projectName+"/archive/master.zip",userName+"；"+projectName+".zip"
+//					,"E:\\ideaDownload\\fileDemo\\");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		File zipFile = new File("E:\\ideaDownload\\fileDemo\\"+userName+"；"+projectName+".zip");
+//		String path = "E:\\ideaDownload\\fileDemo\\uZip\\"+userName+"；"+projectName+"\\";
+//		File newFile=new File(path);
+//		if(!newFile.exists()){
+//			newFile.mkdirs();
+//		}
+//		try {
+//			unZipFiles(zipFile, path);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		ArrayList<IssueEntity> ls=getIssueService.getIssueList(userName,projectName,2);
+		for(IssueEntity i:ls){
+			i=getIssueService.getIssueContent(i);
+			issueSql.save(i);
+		}
+		GitprojectEntity gitprojectEntity=new GitprojectEntity();
+		gitprojectEntity.setProjectName(userName+"/"+projectName);
+		gitprojectEntity.setUserName(userName);
+		gitprojectEntity.setShortProjectName(projectName);
+		gitprojectEntity.setAddDate( new Timestamp(System.currentTimeMillis()));
+		gitProjectRepositorythis.save(gitprojectEntity);
+		System.out.println(userName + projectName+"downloadAndUnzip");
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/getTopTenFileList",method = RequestMethod.GET)
+	@ResponseBody
+	public ArrayList<String>  getTopTenFileList(@RequestParam("userName") String userName,
+										  @RequestParam("issueId") String issueId,
+										  @RequestParam("projectName") String projectName){
+		System.out.println("wenjian liebioa ");
+		IssueEntity i=issueSql.findById(issueId).get();
+		String filePath=path+"uZip\\"+userName+"；"+projectName;
+
+		ArrayList<String> temp=getTopTenService.getFileList(i.getIssueContent(),filePath);
+
+		ArrayList<String> fileList=new ArrayList<>();
+		for(String it:temp){
+			fileList.add(it.substring(filePath.length()+1));
+		}
+//		String e=fileList.get(0);
+//		e="<span style=\"color: red\">"+e+"";
+//		fileList.set(0,e);
+		return fileList;
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/getIssueById",method = RequestMethod.GET)
+	@ResponseBody
+	public IssueEntity  getFileContent(@RequestParam("issueId") String issueId){
+
+		System.out.println("issue  fanhui ");
+		IssueEntity i=issueSql.findById(issueId).get();
+		return i;
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/getGithubRepositories ",method = RequestMethod.GET)
+	@ResponseBody
+	public IssueEntity  getGithubRepositories (@RequestParam("issueId") String issueId){
+//		GithubRepositories()
+
+		IssueEntity i=issueSql.findById(issueId).get();
+		return i;
+	}
+
 
 }
 
