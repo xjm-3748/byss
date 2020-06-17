@@ -1,4 +1,4 @@
-简单的springboot项目，导入时候添加maven项目
+简单的springboot项目，导入时候添加maven项目，然后添加根目录中的infozilla-master.jar到library，并添加根目录文件夹lib作为library
 com.example.demo.DemoApplication运行
 controller都在issueController中
 model是用到的实体
